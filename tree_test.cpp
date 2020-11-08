@@ -71,14 +71,111 @@ void test_delete(const int n, const int k){
     }
 }
 
+template<class Tree>
+double run_insert_test(int n){
+    auto vec = random_vec(n);
+    timer tim;
+    double res;
+    Tree t;
+
+    tim.start();
+    for(int i = 0; i < vec.size(); ++i)
+        t.insert(vec[i]);
+    res = tim.get();
+
+    return res;
+}
+
+template<class Tree>
+std::vector<double> test_insert_speed(std::vector<int> cnt, std::vector<int> rep){
+    std::vector<double> res;
+
+
+    for(int i = 0; i < cnt.size(); ++i){
+        std::cout << "testing insert speed " << i << "/" << cnt.size() << "\r";
+        std::cout.flush();
+
+        double total = 0;
+        for(int j = 0; j < rep[i]; ++j)
+            total += run_insert_test<Tree>(cnt[i]);
+        
+        res.push_back(total/rep[i]/cnt[i]);
+    }
+    std::cout << "testing insert speed " << cnt.size() << "/" << cnt.size() << std::endl;
+
+    return res;
+}
+
+template<class Tree>
+double run_delete_test(int n){
+    auto vec = random_vec(n);
+    timer tim;
+    double res;
+    Tree t;
+
+    for(int i = 0; i < vec.size(); ++i)
+        t.insert(vec[i]);
+    std::shuffle(vec.begin(), vec.end(), gen);
+
+    tim.start();
+    for(int i = 0; i < vec.size(); ++i)
+        t.erase(vec[i]);
+    res = tim.get();
+
+    return res;
+}
+
+template<class Tree>
+std::vector<double> test_delete_speed(std::vector<int> cnt, std::vector<int> rep){
+    std::vector<double> res;
+
+
+    for(int i = 0; i < cnt.size(); ++i){
+        std::cout << "testing delete speed " << i << "/" << cnt.size() << "\r";
+        std::cout.flush();
+
+        double total = 0;
+        for(int j = 0; j < rep[i]; ++j)
+            total += run_delete_test<Tree>(cnt[i]);
+        
+        res.push_back(total/rep[i]/cnt[i]);
+    }
+    std::cout << "testing delete speed " << cnt.size() << "/" << cnt.size() << std::endl;
+
+    return res;
+}
+
+
+std::vector<int> test_cnt{
+    50000, 100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000
+};
+std::vector<int> test_rep{
+    20, 15, 15, 10, 5, 5, 5, 5, 4, 4, 4
+};
+
+template<class Tree>
+void test_tree(std::string name){
+    std::cout << "testing " << name << std::endl;
+
+    test_insert_and_find<Tree>(1000);
+    test_delete<Tree>(1000,100);
+    
+    auto vec = test_insert_speed<Tree>(test_cnt, test_rep);
+    for(auto x: vec)
+        std::cout << x*1000 << " ";
+    std::cout << std::endl;
+    vec = test_delete_speed<Tree>(test_cnt, test_rep);
+    for(auto x: vec)
+        std::cout << x*1000 << " ";
+    std::cout << std::endl << std::endl;
+}
+
 
 
 int main(){
     try{
-        test_insert_and_find<std::set<int>>(1000);
-        test_delete<std::set<int>>(1000,100);
-
-        return 0;
+        test_tree<std::set<int>>("std::set");
+        test_tree<std::unordered_set<int>>("std::unoredered_set");
     }
     catch(const std::exception& e){
         std::cerr << e.what() << std::endl;
