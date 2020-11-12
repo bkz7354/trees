@@ -21,7 +21,8 @@
 
 //! класс дерева
 class RBtree{
-    struct node_st{node_st *p1,*p2; int value; bool red;}; // структура узла
+    template<class T>
+    struct node_st{node_st *p1,*p2; T value; bool red;}; // структура узла
     node_st *tree_root;					//!< корень
     int nodes_count;					//!< число узлов дерева
 private:
@@ -33,9 +34,9 @@ private:
     void BalanceInsert(node_st**);		//!< балансировка вставки
     bool BalanceRemove1(node_st**);		//!< левая балансировка удаления
     bool BalanceRemove2(node_st**);		//!< правая балансировка удаления
-    bool Insert(int,node_st**);			//!< рекурсивная часть вставки
+    bool insert(int,node_st**);			//!< рекурсивная часть вставки
     bool GetMin(node_st**,node_st**);	//!< найти и убрать максимальный узел поддерева
-    bool Remove(node_st**,int);			//!< рекурсивная часть удаления
+    bool erase(node_st**,int);			//!< рекурсивная часть удаления
 public: // отладочная часть
     enum check_code{error_balance,error_struct,ok};	// код ошибки
     void Show();						//!< вывод дерева
@@ -49,9 +50,9 @@ public:
     RBtree();
     ~RBtree();
     void Clear();			//!< снести дерево
-    bool Find(int);			//!< найти значение
-    void Insert(int);		//!< вставить значение
-    void Remove(int);		//!< удалить значение
+    bool count(int);			//!< найти значение
+    void insert(int);		//!< вставить значение
+    void erase(int);		//!< удалить значение
     int GetNodesCount();	//!< узнать число узлов
 };
 
@@ -87,7 +88,7 @@ RBtree::node_st *RBtree::NewNode(int value)
 void RBtree::DelNode(node_st *node)
 {
     nodes_count--;
-    delete node;
+    erase node;
 }
 
 // снос дерева (рекурсивная часть)
@@ -260,7 +261,7 @@ bool RBtree::BalanceRemove2(node_st **root)
 }
 
 
-bool RBtree::Find(int value)
+bool RBtree::count(int value)
 {
     node_st *node=tree_root;
     while(node) {
@@ -273,13 +274,13 @@ bool RBtree::Find(int value)
 
 // рекурсивная часть вставки
 //! \result true если изменений небыло или балансировка в данной вершине не нужна
-bool RBtree::Insert(int value,node_st **root)
+bool RBtree::insert(int value,node_st **root)
 {
     node_st *node=*root;
     if(!node) *root=NewNode(value);
     else {
         if(value==node->value) return true;
-        if(Insert(value,value<node->value?&node->p1:&node->p2)) return true;
+        if(insert(value,value<node->value?&node->p1:&node->p2)) return true;
         BalanceInsert(root);
     }
     return false;
@@ -306,14 +307,14 @@ bool RBtree::GetMin(node_st **root,node_st **res)
 
 // рекурсивная часть удаления
 //! \result true если нужен баланс
-bool RBtree::Remove(node_st **root,int value)
+bool RBtree::erase(node_st **root,int value)
 {
     node_st *t,*node=*root;
     if(!node) return false;
     if(node->value<value) {
-        if(Remove(&node->p2,value))	return BalanceRemove2(root);
+        if(erase(&node->p2,value))	return BalanceRemove2(root);
     } else if(node->value>value) {
-        if(Remove(&node->p1,value))	return BalanceRemove1(root);
+        if(erase(&node->p1,value))	return BalanceRemove1(root);
     } else {
         bool res;
         if(!node->p2) {
@@ -342,16 +343,16 @@ void RBtree::Show()
 }
 
 // функция вставки
-void RBtree::Insert(int value)
+void RBtree::insert(int value)
 {
-    Insert(value,&tree_root);
+    insert(value,&tree_root);
     if(tree_root) tree_root->red=false;
 }
 
 // удаление узла
-void RBtree::Remove(int value)
+void RBtree::erase(int value)
 {
-    Remove(&tree_root,value);
+    erase(&tree_root,value);
 }
 
 // снос дерева
@@ -435,8 +436,8 @@ bool RBtree::TreeWalk(bool *array,int size)
 //  memset(array,false,sizeof(array));
 //  for(n=0; n<SIZE*100; n++) {
 //      printf("pass: %d of %d\r",n+1,SIZE*100);
-//      i=rand()%SIZE; array[i]=true;  tree.Insert(i);
-//      i=rand()%SIZE; array[i]=false; tree.Remove(i);
+//      i=rand()%SIZE; array[i]=true;  tree.insert(i);
+//      i=rand()%SIZE; array[i]=false; tree.erase(i);
 //  }
 //  putchar('\n');
 //  switch(tree.Check()) {
