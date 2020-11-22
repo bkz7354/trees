@@ -117,7 +117,6 @@ template<class Tree>
 double run_delete_test(int n){
     auto vec = random_vec(n);
     timer tim;
-    double res;
     Tree t;
 
     for(int i = 0; i < vec.size(); ++i)
@@ -188,6 +187,10 @@ int main(int argc, char** argv){
 
     try{
         std::ofstream os(argv[1]);
+        for(auto x: test_cnt)
+            os << x << " ";
+        os << std::endl << std::endl;;
+
         test_tree<std::set<int>>("std::set", os);
         test_tree<std::unordered_set<int>>("std::unoredered_set", os);
         test_tree<RBtree<int>>("RB_tree", os);
