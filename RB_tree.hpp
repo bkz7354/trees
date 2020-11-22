@@ -20,12 +20,18 @@
 #include<memory.h>
 
 //! класс дерева
+
+template<typename T>
 class RBtree{
+<<<<<<< HEAD
     struct node_st{node_st *p1,*p2; int value; bool red;}; // структура узла
+=======
+    struct node_st{node_st *p1,*p2; T value; bool red;}; // структура узла
+>>>>>>> 1077b82ffa6a932e5ec35aad80274cc96d996fb0
     node_st *tree_root;					//!< корень
     int nodes_count;					//!< число узлов дерева
 private:
-    node_st *NewNode(int value);		//!< выделение новой вешины
+    node_st *NewNode(T value);		//!< выделение новой вешины
     void DelNode(node_st*);				//!< удаление вершины
     void Clear(node_st*);				//!< снос дерева (рекурсивная часть)
     node_st *Rotate21(node_st*);		//!< вращение влево
@@ -33,47 +39,50 @@ private:
     void BalanceInsert(node_st**);		//!< балансировка вставки
     bool BalanceRemove1(node_st**);		//!< левая балансировка удаления
     bool BalanceRemove2(node_st**);		//!< правая балансировка удаления
-    bool insert(int,node_st**);			//!< рекурсивная часть вставки
+    bool insert(T,node_st**);			//!< рекурсивная часть вставки
     bool GetMin(node_st**,node_st**);	//!< найти и убрать максимальный узел поддерева
-    bool erase(node_st**,int);			//!< рекурсивная часть удаления
-public: // отладочная часть
-    enum check_code{error_balance,error_struct,ok};	// код ошибки
-    void Show();						//!< вывод дерева
-    check_code Check();					//!< проверка дерева
-    bool TreeWalk(bool*,int);			//!< обход дерева и сверка значений с массивом
-private: // отладочная часть
-    void Show(node_st*,int,char);		//!< вывод дерева, рекурсивная часть
-    check_code Check(node_st*,int,int&);//!< проверка дерева (рекурсивная часть)
-    bool TreeWalk(node_st*,bool*,int);	//!< обход дерева и сверка значений с массивом (рекурсивная часть)
+    bool erase(node_st**,T);			//!< рекурсивная часть удаления
+//public: // отладочная часть
+//    enum check_code{error_balance,error_struct,ok};	// код ошибки
+//    void Show();						//!< вывод дерева
+//    check_code Check();					//!< проверка дерева
+//    bool TreeWalk(bool*,int);			//!< обход дерева и сверка значений с массивом
+//private: // отладочная часть
+//    void Show(node_st*,int,char);		//!< вывод дерева, рекурсивная часть
+//    check_code Check(node_st*,int,int&);//!< проверка дерева (рекурсивная часть)
+//    bool TreeWalk(node_st*,bool*,int);	//!< обход дерева и сверка значений с массивом (рекурсивная часть)
 public:
     RBtree();
     ~RBtree();
     void Clear();			//!< снести дерево
-    bool count(int);			//!< найти значение
-    void insert(int);		//!< вставить значение
-    void erase(int);		//!< удалить значение
+    bool count(T);			//!< найти значение
+    void insert(T);		//!< вставить значение
+    void erase(T);		//!< удалить значение
     int GetNodesCount();	//!< узнать число узлов
 };
 
-
-RBtree::RBtree()
+template<typename T>
+RBtree<T>::RBtree()
 {
     tree_root=0;
     nodes_count=0;
 }
 
-RBtree::~RBtree()
+template<typename T>
+RBtree<T>::~RBtree()
 {
     Clear(tree_root);
 }
 
-int RBtree::GetNodesCount()
+template<typename T>
+int RBtree<T>::GetNodesCount()
 {
     return nodes_count;
 }
 
 // выделение новой вешины
-RBtree::node_st *RBtree::NewNode(int value)
+template<typename T>
+typename RBtree<T>::node_st *RBtree<T>::NewNode(T value)
 {
     nodes_count++;
     node_st *node=new node_st;
@@ -84,14 +93,20 @@ RBtree::node_st *RBtree::NewNode(int value)
 }
 
 // удаление вершины
-void RBtree::DelNode(node_st *node)
+template<typename T>
+void RBtree<T>::DelNode(node_st *node)
 {
     nodes_count--;
+<<<<<<< HEAD
     delete node;
+=======
+    erase(node);
+>>>>>>> 1077b82ffa6a932e5ec35aad80274cc96d996fb0
 }
 
 // снос дерева (рекурсивная часть)
-void RBtree::Clear(node_st *node)
+template<typename T>
+void RBtree<T>::Clear(node_st *node)
 {
     if(!node) return;
     Clear(node->p1);
@@ -99,26 +114,27 @@ void RBtree::Clear(node_st *node)
     DelNode(node);
 }
 
-// вывод дерева, рекурсивная часть
-//! \param node узел
-//! \param depth глубина
-//! \param dir   значёк
-//! \code Show(root,0,'*'); \endcode
-void RBtree::Show(node_st *node,int depth,char dir)
-{
-    int n;
-    if(!node) return;
-    for(n=0; n<depth; n++) putchar(' ');
-    printf("%c[%d] (%s)\n",dir,node->value,node->red?"red":"black");
-    Show(node->p1,depth+2,'-');
-    Show(node->p2,depth+2,'+');
-}
+//// вывод дерева, рекурсивная часть
+////! \param node узел
+////! \param depth глубина
+////! \param dir   значёк
+////! \code Show(root,0,'*'); \endcode
+//void RBtree::Show(node_st *node,int depth,char dir)
+//{
+//    int n;
+//    if(!node) return;
+//    for(n=0; n<depth; n++) putchar(' ');
+//    printf("%c[%d] (%s)\n",dir,node->value,node->red?"red":"black");
+//    Show(node->p1,depth+2,'-');
+//    Show(node->p2,depth+2,'+');
+//}
 
 
 // вращение влево
 //! \param index индеск вершины
 //! \result новая вершина дерева
-RBtree::node_st *RBtree::Rotate21(node_st *node)
+template<typename T>
+typename RBtree<T>::node_st *RBtree<T>::Rotate21(node_st *node)
 {
     node_st *p2 =node->p2;
     node_st *p21=p2->p1;
@@ -130,7 +146,8 @@ RBtree::node_st *RBtree::Rotate21(node_st *node)
 // вращение вправо
 //! \param index индеск вершины
 //! \result новая вершина дерева
-RBtree::node_st *RBtree::Rotate12(node_st *node)
+template<typename T>
+typename RBtree<T>::node_st *RBtree<T>::Rotate12(node_st *node)
 {
     node_st *p1 =node->p1;
     node_st *p12=p1->p2;
@@ -141,7 +158,8 @@ RBtree::node_st *RBtree::Rotate12(node_st *node)
 
 
 // балансировка вершины
-void RBtree::BalanceInsert(node_st **root)
+template<typename T>
+void RBtree<T>::BalanceInsert(node_st **root)
 {
     node_st *p1,*p2,*px1,*px2;
     node_st *node=*root;
@@ -183,8 +201,8 @@ void RBtree::BalanceInsert(node_st **root)
     }
 }
 
-
-bool RBtree::BalanceRemove1(node_st **root)
+template<typename T>
+bool RBtree<T>::BalanceRemove1(node_st **root)
 {
     node_st *node=*root;
     node_st *p1=node->p1;
@@ -223,7 +241,8 @@ bool RBtree::BalanceRemove1(node_st **root)
     return false;
 }
 
-bool RBtree::BalanceRemove2(node_st **root)
+template<typename T>
+bool RBtree<T>::BalanceRemove2(node_st **root)
 {
     node_st *node=*root;
     node_st *p1=node->p1;
@@ -259,8 +278,8 @@ bool RBtree::BalanceRemove2(node_st **root)
     return false;
 }
 
-
-bool RBtree::count(int value)
+template<typename T>
+bool RBtree<T>::count(T value)
 {
     node_st *node=tree_root;
     while(node) {
@@ -273,7 +292,8 @@ bool RBtree::count(int value)
 
 // рекурсивная часть вставки
 //! \result true если изменений небыло или балансировка в данной вершине не нужна
-bool RBtree::insert(int value,node_st **root)
+template<typename T>
+bool RBtree<T>::insert(T value,node_st **root)
 {
     node_st *node=*root;
     if(!node) *root=NewNode(value);
@@ -290,7 +310,8 @@ bool RBtree::insert(int value,node_st **root)
 //! \param root корень дерева в котором надо найти элемент
 //! \retval res эелемент который был удалён
 //! \result true если нужен баланс
-bool RBtree::GetMin(node_st **root,node_st **res)
+template<typename T>
+bool RBtree<T>::GetMin(node_st **root,node_st **res)
 {
     node_st *node=*root;
     if(node->p1) {
@@ -306,7 +327,8 @@ bool RBtree::GetMin(node_st **root,node_st **res)
 
 // рекурсивная часть удаления
 //! \result true если нужен баланс
-bool RBtree::erase(node_st **root,int value)
+template<typename T>
+bool RBtree<T>::erase(node_st **root,T value)
 {
     node_st *t,*node=*root;
     if(!node) return false;
@@ -334,89 +356,96 @@ bool RBtree::erase(node_st **root,int value)
 }
 
 
-// вывод дерева
-void RBtree::Show()
-{
-    printf("[tree]\n");
-    Show(tree_root,0,'*');
-}
+//// вывод дерева
+//void RBtree<T>::Show()
+//{
+//    printf("[tree]\n");
+//    Show(tree_root,0,'*');
+//}
 
 // функция вставки
-void RBtree::insert(int value)
+template<typename T>
+void RBtree<T>::insert(T value)
 {
     insert(value,&tree_root);
     if(tree_root) tree_root->red=false;
 }
 
 // удаление узла
-void RBtree::erase(int value)
+template<typename T>
+void RBtree<T>::erase(T value)
 {
     erase(&tree_root,value);
 }
 
 // снос дерева
-void RBtree::Clear()
+template<typename T>
+void RBtree<T>::Clear()
 {
     Clear(tree_root);
     tree_root=0;
 }
 
 
-// проверка дерева (рекурсивная часть)
-//! \param tree дерево
-//! \param d    текущая чёрная глубина
-//! \param h    эталонная чёрная глубина
-//! \result 0 или код ошибки
-RBtree::check_code RBtree::Check(node_st *tree,int d,int &h)
-{
-    if(!tree) {
-        // количество чёрных вершин на любом пути одинаковое
-        if(h<0) h=d;
-        return h==d?ok:error_balance;
-    }
-    node_st *p1=tree->p1;
-    node_st *p2=tree->p2;
-    // красная вершина должна иметь чёрных потомков
-    if(tree->red && (p1 && p1->red || p2 && p2->red)) return error_struct;
-    if(p1 && tree->value<p1->value || p2 && tree->value>p2->value) return error_struct;
-    if(!tree->red) d++;
-    check_code n=Check(p1,d,h); if(n) return n;
-    return Check(p2,d,h);
-}
+//// проверка дерева (рекурсивная часть)
+////! \param tree дерево
+////! \param d    текущая чёрная глубина
+////! \param h    эталонная чёрная глубина
+////! \result 0 или код ошибки
+//template<typename T>
+//typename RBtree<T>::check_code RBtree<T>::Check(node_st *tree,int d,int &h)
+//{
+//    if(!tree) {
+//        // количество чёрных вершин на любом пути одинаковое
+//        if(h<0) h=d;
+//        return h==d?ok:error_balance;
+//    }
+//    node_st *p1=tree->p1;
+//    node_st *p2=tree->p2;
+//    // красная вершина должна иметь чёрных потомков
+//    if(tree->red && (p1 && p1->red || p2 && p2->red)) return error_struct;
+//    if(p1 && tree->value<p1->value || p2 && tree->value>p2->value) return error_struct;
+//    if(!tree->red) d++;
+//    check_code n=Check(p1,d,h); if(n) return n;
+//    return Check(p2,d,h);
+//}
 
 
-// проверка дерева
-RBtree::check_code RBtree::Check()
-{
-    int d= 0;
-    int h=-1;
-    if(!tree_root) return ok;
-    if(tree_root->red) return error_struct;
-    return Check(tree_root,d,h);
-}
+//// проверка дерева
+//template<typename T>
+//RBtree<T>::check_code RBtree<T>::Check()
+//{
+//    int d= 0;
+//    int h=-1;
+//    if(!tree_root) return ok;
+//    if(tree_root->red) return error_struct;
+//    return Check(tree_root,d,h);
+//}
 
-// обход дерева и сверка значений с массивом (рекурсивная часть)
-//! \param node  корень дерева
-//! \param array массив для сверки
-//! \param size  размер массива
-bool RBtree::TreeWalk(node_st *node,bool *array,int size)
-{
-    if(!node) return false;
-    int value=node->value;
-    if(value<0 || value>=size || !array[value]) return true;
-    array[value]=false;
-    return TreeWalk(node->p1,array,size) || TreeWalk(node->p2,array,size);
-}
-
-// обход дерева и сверка значений с массивом
-//! \param array массив для сверки
-//! \param size  размер массива
-bool RBtree::TreeWalk(bool *array,int size)
-{
-    if(TreeWalk(tree_root,array,size)) return true;
-    for(int n=0; n<size; n++) if(array[n]) return true;
-    return false;
-}
+//// обход дерева и сверка значений с массивом (рекурсивная часть)
+////! \param node  корень дерева
+////! \param array массив для сверки
+////! \param size  размер массива
+//template<typename T>
+//bool RBtree<T>::TreeWalk(node_st *node,bool *array,int size)
+//{
+//    if(!node) return false;
+//    int value=node->value;
+//    if(value<0 || value>=size || !array[value]) return true;
+//    array[value]=false;
+//    return TreeWalk(node->p1,array,size) || TreeWalk(node->p2,array,size);
+//}
+//
+//// обход дерева и сверка значений с массивом
+////! \param array массив для сверки
+////! \param size  размер массива
+//template<typename T>
+//bool RBtree<T>::TreeWalk(bool *array,int size)
+//{
+//    if(TreeWalk(tree_root,array,size)) return true;
+//    for(int n=0; n<size; n++) if(array[n]) return true;
+//    return false;
+//}
 
 
 //================================================================
@@ -429,7 +458,7 @@ bool RBtree::TreeWalk(bool *array,int size)
 //int main()
 //{
 //    int n,i;
-//   RBtree tree;
+//   RBtree<T> tree;
 // bool array[SIZE];
 //  srand(time(0));
 //  memset(array,false,sizeof(array));
@@ -440,8 +469,8 @@ bool RBtree::TreeWalk(bool *array,int size)
 //  }
 //  putchar('\n');
 //  switch(tree.Check()) {
-//      case RBtree::error_struct:   printf("*** structure error\n\a"); break;
-//      case RBtree::error_balance:  printf("*** balance error\n\a");   break;
+//      case RBtree<T>::error_struct:   printf("*** structure error\n\a"); break;
+//      case RBtree<T>::error_balance:  printf("*** balance error\n\a");   break;
 //      default:
 //          printf("nodes count: %d\n",tree.GetNodesCount());
 //          break;
