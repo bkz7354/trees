@@ -185,7 +185,7 @@ int main(int argc, char** argv){
         std::ofstream os(argv[1]);
         test_tree<std::set<int>>("std::set", os);
         test_tree<std::unordered_set<int>>("std::unoredered_set", os);
-        test_tree<RBtree>("RB_tree", os);
+        test_tree<RBtree<int>>("RB_tree", os);
     }
     catch(const std::exception& e){
         std::cerr << e.what() << std::endl;
