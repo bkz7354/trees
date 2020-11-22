@@ -67,6 +67,7 @@ tree_t<T> rotateleft(tree_t<T> q) // left rotation
     fixheight(p);
     return p;
 };
+
 template <typename T>
 tree_t<T> balance(tree_t<T> p) // balancing node p
 {
@@ -112,11 +113,13 @@ bool find(tree_t<T> t, const T& val){
     else if(val > t->val)
         return find(t->r, val);
 };
+
 template<typename T>
 tree_t<T> findmin(tree_t<T> p) // searching a node w/min key p
 {
     return p->left ? findmin(p->left) : p;
 };
+
 template<typename T>
 tree_t<T> removemin(tree_t<T> p) // deleting the min key node  p
 {
@@ -125,6 +128,7 @@ tree_t<T> removemin(tree_t<T> p) // deleting the min key node  p
     p->left = removemin(p->left);
     return balance(p);
 };
+
 template<typename T>
 tree_t<T> remove(tree_t<T> p, int k) // deleting key k from tree p
 {
@@ -147,6 +151,6 @@ tree_t<T> remove(tree_t<T> p, int k) // deleting key k from tree p
 }
 
 
-int main(){
+// int main(){
 
-}
+// }

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <unordered_set>
 #include <set>
+#include <fstream>
 
 #include "AVL_tree.hpp"
 #include "RB_tree.hpp"
@@ -154,28 +155,37 @@ std::vector<int> test_rep{
 };
 
 template<class Tree>
-void test_tree(std::string name){
+void test_tree(std::string name, std::ofstream& os){
     std::cout << "testing " << name << std::endl;
+    os << name << std::endl;
 
     test_insert_and_find<Tree>(1000);
     test_delete<Tree>(1000,100);
     
     auto vec = test_insert_speed<Tree>(test_cnt, test_rep);
     for(auto x: vec)
-        std::cout << x*1000 << " ";
-    std::cout << std::endl;
+        os << x*1000000 << " ";
+    os << std::endl;
+
     vec = test_delete_speed<Tree>(test_cnt, test_rep);
     for(auto x: vec)
-        std::cout << x*1000 << " ";
-    std::cout << std::endl << std::endl;
+        os << x*1000000 << " ";
+    os << std::endl << std::endl;
 }
 
 
 
-int main(){
+int main(int argc, char** argv){
+    if(argc < 2){
+        std::cerr << "syntax: ./tree_test <output filename>" << std::endl;
+        return 1;
+    }
+
     try{
-        test_tree<std::set<int>>("std::set");
-        test_tree<std::unordered_set<int>>("std::unoredered_set");
+        std::ofstream os(argv[1]);
+        test_tree<std::set<int>>("std::set", os);
+        test_tree<std::unordered_set<int>>("std::unoredered_set", os);
+        test_tree<RBtree>("RB_tree", os);
     }
     catch(const std::exception& e){
         std::cerr << e.what() << std::endl;

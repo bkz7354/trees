@@ -21,8 +21,7 @@
 
 //! класс дерева
 class RBtree{
-    template<class T>
-    struct node_st{node_st *p1,*p2; T value; bool red;}; // структура узла
+    struct node_st{node_st *p1,*p2; int value; bool red;}; // структура узла
     node_st *tree_root;					//!< корень
     int nodes_count;					//!< число узлов дерева
 private:
@@ -88,7 +87,7 @@ RBtree::node_st *RBtree::NewNode(int value)
 void RBtree::DelNode(node_st *node)
 {
     nodes_count--;
-    erase node;
+    delete node;
 }
 
 // снос дерева (рекурсивная часть)
