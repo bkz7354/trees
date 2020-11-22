@@ -127,9 +127,8 @@ double run_delete_test(int n){
     tim.start();
     for(int i = 0; i < vec.size(); ++i)
         t.erase(vec[i]);
-    res = tim.get();
-
-    return res;
+    
+    return tim.get();
 }
 
 template<class Tree>
