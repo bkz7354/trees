@@ -25,12 +25,21 @@ struct timer{
     }
 };
 
-std::mt19937 gen(std::random_device{}());
+
 std::vector<int> random_vec(const int sz){
+    static std::mt19937 gen(std::random_device{}());
+    
     std::vector<int> res(sz);
     std::generate(res.begin(), res.end(), gen);
     return res;
 }
+
+void shuffle_vec(std::vector<int>& v){
+    static std::mt19937 gen(std::random_device{}());
+
+    std::shuffle(v.begin(), v.end(), gen);
+}
+
 
 template<class Tree>
 void test_insert_and_find(const int n){
@@ -59,7 +68,7 @@ void test_delete(const int n, const int k){
         t.insert(x);
     std::unordered_set<int> s(samp.begin(), samp.end());
 
-    std::shuffle(samp.begin(), samp.end(), gen);
+    shuffle_vec(samp);
     for(int i = 0, j = 0; i < n; i += k){
         for(; j < i; ++j){
             s.erase(samp[j]);
@@ -76,21 +85,18 @@ template<class Tree>
 double run_insert_test(int n){
     auto vec = random_vec(n);
     timer tim;
-    double res;
     Tree t;
 
     tim.start();
     for(int i = 0; i < vec.size(); ++i)
         t.insert(vec[i]);
-    res = tim.get();
-
-    return res;
+    
+    return tim.get();
 }
 
 template<class Tree>
 std::vector<double> test_insert_speed(std::vector<int> cnt, std::vector<int> rep){
     std::vector<double> res;
-
 
     for(int i = 0; i < cnt.size(); ++i){
         std::cout << "testing insert speed " << i << "/" << cnt.size() << "\r";
@@ -116,7 +122,7 @@ double run_delete_test(int n){
 
     for(int i = 0; i < vec.size(); ++i)
         t.insert(vec[i]);
-    std::shuffle(vec.begin(), vec.end(), gen);
+    shuffle_vec(vec);
 
     tim.start();
     for(int i = 0; i < vec.size(); ++i)
@@ -147,10 +153,10 @@ std::vector<double> test_delete_speed(std::vector<int> cnt, std::vector<int> rep
 }
 
 
-std::vector<int> test_cnt{
+const std::vector<int> test_cnt{
     50000, 100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000
 };
-std::vector<int> test_rep{
+const std::vector<int> test_rep{
     20, 15, 15, 10, 5, 5, 5, 5, 4, 4, 4
 };
 
