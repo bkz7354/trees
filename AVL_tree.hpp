@@ -277,14 +277,7 @@ typename avl_tree<T>::tree_t avl_tree<T>::inner_remove(tree_t p, int k) // delet
 
 
 
+
 int main(){
-    avl_tree<int> cedre = avl_tree<int>();
-    cedre.insert(3);
-    cedre.insert(2);
-    cedre.insert(1);
-    cedre.insert(5);
-    cedre.insert(-11);
-    cedre.display();
-    //delete[] cedre;
-    return 0;
 }
+
