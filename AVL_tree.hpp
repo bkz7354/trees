@@ -20,19 +20,15 @@ private:
         node* r = nullptr;//pointer to daughter r
         unsigned char height = 0; //height of a subtree which has this node as a root
 
-        node(){};
-        ~node(){
-            std::cout <<"node destroyed\n";
-            //node_del(this);
-            //delete  [] l;
-            //delete  [] r;
-        };
+        node();
+
         node(const T& val_): val(val_), height{1} {}//construct a node which stores val_ and has type T (but val_ is T&)
 
     };
     using tree_t = node*;
     
     tree_t root = nullptr;
+    int nodes_count;
 
     int difference(tree_t p);
     unsigned char height(tree_t p);
@@ -48,8 +44,13 @@ private:
     void inorder(tree_t t);
     void preorder(tree_t t);
     void postorder(tree_t t);
-    void del_loop(tree_t t);
-    void node_del(tree_t n);
+    //void del_loop(tree_t t);
+    //void node_del(tree_t n);
+    void tree_clear();
+    void erase(T value);
+    void tree_clear(tree_t node);
+    void DelNode(tree_t node);
+    int GetNodesCount();
     
     tree_t findmin(tree_t p);
     tree_t removemin(tree_t p);
@@ -74,31 +75,57 @@ public:
             inorder(root);
             std::cout << std::endl;
         }
-    avl_tree() {};
-    ~avl_tree(){
-        del_loop(root);
-        std::cout <<"avl_tree destroyed\n";
-        
-        //delete[] root;
-    }
+    avl_tree() {root = 0; nodes_count = 0;};
+    ~avl_tree();
 };
 
 //functions outside the class
+
+
 template<typename T>
-void avl_tree<T>::del_loop(tree_t t){
-    if (t == NULL)
-       return;
-    del_loop(t->l);
-    node_del(t->l);
-    del_loop(t->r);
-    node_del(t->r);
+avl_tree<T>::~avl_tree()
+{
+    tree_clear(root);
 }
 
 template<typename T>
-void avl_tree<T>::node_del(tree_t n){
-    delete[] n;
+int avl_tree<T>::GetNodesCount()
+{
+    return nodes_count;
 }
 
+// удаление вершины
+template<typename T>
+void avl_tree<T>::DelNode(tree_t node)
+{
+    nodes_count--;
+    delete node;
+}
+
+// снос дерева (рекурсивная часть)
+template<typename T>
+void avl_tree<T>::tree_clear(tree_t node)
+{
+    if(!node) return;
+    tree_clear(node->l);
+    tree_clear(node->r);
+    DelNode(node);
+}
+
+// удаление узла
+template<typename T>
+void avl_tree<T>::erase(T value)
+{
+    erase(&root,value);
+}
+
+// снос дерева
+template<typename T>
+void avl_tree<T>::tree_clear()
+{
+    tree_clear(root);
+    root=0;
+}
 
 template<typename T>
 void avl_tree<T>::inorder(tree_t t) {
