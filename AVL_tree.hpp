@@ -21,6 +21,12 @@ private:
         unsigned char height = 0; //height of a subtree which has this node as a root
 
         node(){};
+        ~node(){
+            std::cout <<"node destroyed\n";
+            //node_del(this);
+            //delete  [] l;
+            //delete  [] r;
+        };
         node(const T& val_): val(val_), height{1} {}//construct a node which stores val_ and has type T (but val_ is T&)
 
     };
@@ -42,14 +48,14 @@ private:
     void inorder(tree_t t);
     void preorder(tree_t t);
     void postorder(tree_t t);
+    void del_loop(tree_t t);
+    void node_del(tree_t n);
     
     tree_t findmin(tree_t p);
     tree_t removemin(tree_t p);
     tree_t inner_remove(tree_t p, int k);
 
 public:
-    
-    avl_tree() {}
 
     void insert(const T& val){
         root = inner_insert(root, val);
@@ -68,9 +74,30 @@ public:
             inorder(root);
             std::cout << std::endl;
         }
+    avl_tree() {};
+    ~avl_tree(){
+        del_loop(root);
+        std::cout <<"avl_tree destroyed\n";
+        
+        //delete[] root;
+    }
 };
 
 //functions outside the class
+template<typename T>
+void avl_tree<T>::del_loop(tree_t t){
+    if (t == NULL)
+       return;
+    del_loop(t->l);
+    node_del(t->l);
+    del_loop(t->r);
+    node_del(t->r);
+}
+
+template<typename T>
+void avl_tree<T>::node_del(tree_t n){
+    delete[] n;
+}
 
 
 template<typename T>
@@ -231,4 +258,6 @@ int main(){
     cedre.insert(5);
     cedre.insert(-11);
     cedre.display();
+    //delete[] cedre;
+    return 0;
 }
