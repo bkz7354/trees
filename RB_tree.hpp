@@ -14,83 +14,89 @@
 // НО в текущих реалиях писать это с нуля это жопа полная
 // Спасибо за внимание :)
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<time.h>
-#include<memory.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <memory.h>
 
 //! класс дерева
 
-template<typename T>
-class RBtree{
+template <typename T>
+class RBtree
+{
 
-    struct node_st{node_st *p1,*p2; T value; bool red;}; // структура узла
-    node_st *tree_root;					//!< корень
-    int nodes_count;					//!< число узлов дерева
+    struct node_st
+    {
+        node_st *p1, *p2;
+        T value;
+        bool red;
+    };                  // структура узла
+    node_st *tree_root; //!< корень
+    int nodes_count;    //!< число узлов дерева
 private:
-    node_st *NewNode(T value);		//!< выделение новой вешины
-    void DelNode(node_st*);				//!< удаление вершины
-    void Clear(node_st*);				//!< снос дерева (рекурсивная часть)
-    node_st *Rotate21(node_st*);		//!< вращение влево
-    node_st *Rotate12(node_st*);		//!< вращение вправо
-    void BalanceInsert(node_st**);		//!< балансировка вставки
-    bool BalanceRemove1(node_st**);		//!< левая балансировка удаления
-    bool BalanceRemove2(node_st**);		//!< правая балансировка удаления
-    bool insert(T,node_st**);			//!< рекурсивная часть вставки
-    bool GetMin(node_st**,node_st**);	//!< найти и убрать максимальный узел поддерева
-    bool erase(node_st**,T);			//!< рекурсивная часть удаления
-//public: // отладочная часть
-//    enum check_code{error_balance,error_struct,ok};	// код ошибки
-//    void Show();						//!< вывод дерева
-//    check_code Check();					//!< проверка дерева
-//    bool TreeWalk(bool*,int);			//!< обход дерева и сверка значений с массивом
-//private: // отладочная часть
-//    void Show(node_st*,int,char);		//!< вывод дерева, рекурсивная часть
-//    check_code Check(node_st*,int,int&);//!< проверка дерева (рекурсивная часть)
-//    bool TreeWalk(node_st*,bool*,int);	//!< обход дерева и сверка значений с массивом (рекурсивная часть)
+    node_st *NewNode(T value);           //!< выделение новой вешины
+    void DelNode(node_st *);             //!< удаление вершины
+    void Clear(node_st *);               //!< снос дерева (рекурсивная часть)
+    node_st *Rotate21(node_st *);        //!< вращение влево
+    node_st *Rotate12(node_st *);        //!< вращение вправо
+    void BalanceInsert(node_st **);      //!< балансировка вставки
+    bool BalanceRemove1(node_st **);     //!< левая балансировка удаления
+    bool BalanceRemove2(node_st **);     //!< правая балансировка удаления
+    bool insert(T, node_st **);          //!< рекурсивная часть вставки
+    bool GetMin(node_st **, node_st **); //!< найти и убрать максимальный узел поддерева
+    bool erase(node_st **, T);           //!< рекурсивная часть удаления
+    //public: // отладочная часть
+    //    enum check_code{error_balance,error_struct,ok};	// код ошибки
+    //    void Show();						//!< вывод дерева
+    //    check_code Check();					//!< проверка дерева
+    //    bool TreeWalk(bool*,int);			//!< обход дерева и сверка значений с массивом
+    //private: // отладочная часть
+    //    void Show(node_st*,int,char);		//!< вывод дерева, рекурсивная часть
+    //    check_code Check(node_st*,int,int&);//!< проверка дерева (рекурсивная часть)
+    //    bool TreeWalk(node_st*,bool*,int);	//!< обход дерева и сверка значений с массивом (рекурсивная часть)
 public:
     RBtree();
     ~RBtree();
-    void Clear();			//!< снести дерево
-    bool count(T);			//!< найти значение
-    void insert(T);		//!< вставить значение
-    void erase(T);		//!< удалить значение
-    int GetNodesCount();	//!< узнать число узлов
+    void Clear();        //!< снести дерево
+    bool count(T);       //!< найти значение
+    void insert(T);      //!< вставить значение
+    void erase(T);       //!< удалить значение
+    int GetNodesCount(); //!< узнать число узлов
 };
 
-template<typename T>
+template <typename T>
 RBtree<T>::RBtree()
 {
-    tree_root=0;
-    nodes_count=0;
+    tree_root = 0;
+    nodes_count = 0;
 }
 
-template<typename T>
+template <typename T>
 RBtree<T>::~RBtree()
 {
     Clear(tree_root);
 }
 
-template<typename T>
+template <typename T>
 int RBtree<T>::GetNodesCount()
 {
     return nodes_count;
 }
 
 // выделение новой вешины
-template<typename T>
+template <typename T>
 typename RBtree<T>::node_st *RBtree<T>::NewNode(T value)
 {
     nodes_count++;
-    node_st *node=new node_st;
-    node->value=value;
-    node->p1=node->p2=0;
-    node->red=true;
+    node_st *node = new node_st;
+    node->value = value;
+    node->p1 = node->p2 = 0;
+    node->red = true;
     return node;
 }
 
 // удаление вершины
-template<typename T>
+template <typename T>
 void RBtree<T>::DelNode(node_st *node)
 {
     nodes_count--;
@@ -98,10 +104,11 @@ void RBtree<T>::DelNode(node_st *node)
 }
 
 // снос дерева (рекурсивная часть)
-template<typename T>
+template <typename T>
 void RBtree<T>::Clear(node_st *node)
 {
-    if(!node) return;
+    if (!node)
+        return;
     Clear(node->p1);
     Clear(node->p2);
     DelNode(node);
@@ -122,232 +129,272 @@ void RBtree<T>::Clear(node_st *node)
 //    Show(node->p2,depth+2,'+');
 //}
 
-
 // вращение влево
 //! \param index индеск вершины
 //! \result новая вершина дерева
-template<typename T>
+template <typename T>
 typename RBtree<T>::node_st *RBtree<T>::Rotate21(node_st *node)
 {
-    node_st *p2 =node->p2;
-    node_st *p21=p2->p1;
-    p2->p1=node;
-    node->p2=p21;
+    node_st *p2 = node->p2;
+    node_st *p21 = p2->p1;
+    p2->p1 = node;
+    node->p2 = p21;
     return p2;
 }
 
 // вращение вправо
 //! \param index индеск вершины
 //! \result новая вершина дерева
-template<typename T>
+template <typename T>
 typename RBtree<T>::node_st *RBtree<T>::Rotate12(node_st *node)
 {
-    node_st *p1 =node->p1;
-    node_st *p12=p1->p2;
-    p1->p2=node;
-    node->p1=p12;
+    node_st *p1 = node->p1;
+    node_st *p12 = p1->p2;
+    p1->p2 = node;
+    node->p1 = p12;
     return p1;
 }
 
-
 // балансировка вершины
-template<typename T>
+template <typename T>
 void RBtree<T>::BalanceInsert(node_st **root)
 {
-    node_st *p1,*p2,*px1,*px2;
-    node_st *node=*root;
-    if(node->red) return;
-    p1=node->p1;
-    p2=node->p2;
-    if(p1 && p1->red) {
-        px2=p1->p2;				// задача найти две рядом стоящие крастне вершины
-        if(px2 && px2->red) p1=node->p1=Rotate21(p1);
-        px1=p1->p1;
-        if(px1 && px1->red) {
-            node->red=true;
-            p1->red=false;
-            if(p2 && p2->red) {	// отделаемся перекраской вершин
-                px1->red=true;
-                p2->red=false;
+    node_st *p1, *p2, *px1, *px2;
+    node_st *node = *root;
+    if (node->red)
+        return;
+    p1 = node->p1;
+    p2 = node->p2;
+    if (p1 && p1->red)
+    {
+        px2 = p1->p2; // задача найти две рядом стоящие крастне вершины
+        if (px2 && px2->red)
+            p1 = node->p1 = Rotate21(p1);
+        px1 = p1->p1;
+        if (px1 && px1->red)
+        {
+            node->red = true;
+            p1->red = false;
+            if (p2 && p2->red)
+            { // отделаемся перекраской вершин
+                px1->red = true;
+                p2->red = false;
                 return;
             }
-            *root=Rotate12(node);
+            *root = Rotate12(node);
             return;
         }
     }
     // тоже самое в другую сторону
-    if(p2 && p2->red) {
-        px1=p2->p1;				// задача найти две рядом стоящие крастне вершины
-        if(px1 && px1->red) p2=node->p2=Rotate12(p2);
-        px2=p2->p2;
-        if(px2 && px2->red) {
-            node->red=true;
-            p2->red=false;
-            if(p1 && p1->red) {	// отделаемся перекраской вершин
-                px2->red=true;
-                p1->red=false;
+    if (p2 && p2->red)
+    {
+        px1 = p2->p1; // задача найти две рядом стоящие крастне вершины
+        if (px1 && px1->red)
+            p2 = node->p2 = Rotate12(p2);
+        px2 = p2->p2;
+        if (px2 && px2->red)
+        {
+            node->red = true;
+            p2->red = false;
+            if (p1 && p1->red)
+            { // отделаемся перекраской вершин
+                px2->red = true;
+                p1->red = false;
                 return;
             }
-            *root=Rotate21(node);
+            *root = Rotate21(node);
             return;
         }
     }
 }
 
-template<typename T>
+template <typename T>
 bool RBtree<T>::BalanceRemove1(node_st **root)
 {
-    node_st *node=*root;
-    node_st *p1=node->p1;
-    node_st *p2=node->p2;
-    if(p1 && p1->red) {
-        p1->red=false;return false;
-    }
-    if(p2 && p2->red) { // случай 1
-        node->red=true;
-        p2->red=false;
-        node=*root=Rotate21(node);
-        if(BalanceRemove1(&node->p1)) node->p1->red=false;
+    node_st *node = *root;
+    node_st *p1 = node->p1;
+    node_st *p2 = node->p2;
+    if (p1 && p1->red)
+    {
+        p1->red = false;
         return false;
     }
-    unsigned int mask=0;
-    node_st *p21=p2->p1;
-    node_st *p22=p2->p2;
-    if(p21 && p21->red) mask|=1;
-    if(p22 && p22->red) mask|=2;
-    switch(mask)
+    if (p2 && p2->red)
+    { // случай 1
+        node->red = true;
+        p2->red = false;
+        node = *root = Rotate21(node);
+        if (BalanceRemove1(&node->p1))
+            node->p1->red = false;
+        return false;
+    }
+    unsigned int mask = 0;
+    node_st *p21 = p2->p1;
+    node_st *p22 = p2->p2;
+    if (p21 && p21->red)
+        mask |= 1;
+    if (p22 && p22->red)
+        mask |= 2;
+    switch (mask)
     {
-        case 0:		// случай 2 - if((!p21 || !p21->red) && (!p22 || !p22->red))
-            p2->red=true;
-            return true;
-        case 1:
-        case 3:		// случай 3 - if(p21 && p21->red)
-            p2->red=true;
-            p21->red=false;
-            p2=node->p2=Rotate12(p2);
-            p22=p2->p2;
-        case 2:		// случай 4 - if(p22 && p22->red)
-            p2->red=node->red;
-            p22->red=node->red=false;
-            *root=Rotate21(node);
+    case 0: // случай 2 - if((!p21 || !p21->red) && (!p22 || !p22->red))
+        p2->red = true;
+        return true;
+    case 1:
+    case 3: // случай 3 - if(p21 && p21->red)
+        p2->red = true;
+        p21->red = false;
+        p2 = node->p2 = Rotate12(p2);
+        p22 = p2->p2;
+    case 2: // случай 4 - if(p22 && p22->red)
+        p2->red = node->red;
+        p22->red = node->red = false;
+        *root = Rotate21(node);
     }
     return false;
 }
 
-template<typename T>
+template <typename T>
 bool RBtree<T>::BalanceRemove2(node_st **root)
 {
-    node_st *node=*root;
-    node_st *p1=node->p1;
-    node_st *p2=node->p2;
-    if(p2 && p2->red) {p2->red=false;return false;}
-    if(p1 && p1->red) { // случай 1
-        node->red=true;
-        p1->red=false;
-        node=*root=Rotate12(node);
-        if(BalanceRemove2(&node->p2)) node->p2->red=false;
+    node_st *node = *root;
+    node_st *p1 = node->p1;
+    node_st *p2 = node->p2;
+    if (p2 && p2->red)
+    {
+        p2->red = false;
         return false;
     }
-    unsigned int mask=0;
-    node_st *p11=p1->p1;
-    node_st *p12=p1->p2;
-    if(p11 && p11->red) mask|=1;
-    if(p12 && p12->red) mask|=2;
-    switch(mask) {
-        case 0:		// случай 2 - if((!p12 || !p12->red) && (!p11 || !p11->red))
-            p1->red=true;
-            return true;
-        case 2:
-        case 3:		// случай 3 - if(p12 && p12->red)
-            p1->red=true;
-            p12->red=false;
-            p1=node->p1=Rotate21(p1);
-            p11=p1->p1;
-        case 1:		// случай 4 - if(p11 && p11->red)
-            p1->red=node->red;
-            p11->red=node->red=false;
-            *root=Rotate12(node);
+    if (p1 && p1->red)
+    { // случай 1
+        node->red = true;
+        p1->red = false;
+        node = *root = Rotate12(node);
+        if (BalanceRemove2(&node->p2))
+            node->p2->red = false;
+        return false;
+    }
+    unsigned int mask = 0;
+    node_st *p11 = p1->p1;
+    node_st *p12 = p1->p2;
+    if (p11 && p11->red)
+        mask |= 1;
+    if (p12 && p12->red)
+        mask |= 2;
+    switch (mask)
+    {
+    case 0: // случай 2 - if((!p12 || !p12->red) && (!p11 || !p11->red))
+        p1->red = true;
+        return true;
+    case 2:
+    case 3: // случай 3 - if(p12 && p12->red)
+        p1->red = true;
+        p12->red = false;
+        p1 = node->p1 = Rotate21(p1);
+        p11 = p1->p1;
+    case 1: // случай 4 - if(p11 && p11->red)
+        p1->red = node->red;
+        p11->red = node->red = false;
+        *root = Rotate12(node);
     }
     return false;
 }
 
-template<typename T>
+template <typename T>
 bool RBtree<T>::count(T value)
 {
-    node_st *node=tree_root;
-    while(node) {
-        if(node->value==value) return true;
-        node=node->value>value?node->p1:node->p2;
+    node_st *node = tree_root;
+    while (node)
+    {
+        if (node->value == value)
+            return true;
+        node = node->value > value ? node->p1 : node->p2;
     }
     return false;
 }
-
 
 // рекурсивная часть вставки
 //! \result true если изменений небыло или балансировка в данной вершине не нужна
-template<typename T>
-bool RBtree<T>::insert(T value,node_st **root)
+template <typename T>
+bool RBtree<T>::insert(T value, node_st **root)
 {
-    node_st *node=*root;
-    if(!node) *root=NewNode(value);
-    else {
-        if(value==node->value) return true;
-        if(insert(value,value<node->value?&node->p1:&node->p2)) return true;
+    node_st *node = *root;
+    if (!node)
+        *root = NewNode(value);
+    else
+    {
+        if (value == node->value)
+            return true;
+        if (insert(value, value < node->value ? &node->p1 : &node->p2))
+            return true;
         BalanceInsert(root);
     }
     return false;
 }
 
-
 // найти и убрать максимальный узел поддерева
 //! \param root корень дерева в котором надо найти элемент
 //! \retval res эелемент который был удалён
 //! \result true если нужен баланс
-template<typename T>
-bool RBtree<T>::GetMin(node_st **root,node_st **res)
+template <typename T>
+bool RBtree<T>::GetMin(node_st **root, node_st **res)
 {
-    node_st *node=*root;
-    if(node->p1) {
-        if(GetMin(&node->p1,res)) return BalanceRemove1(root);
-    } else {
-        *root=node->p2;
-        *res=node;
+    node_st *node = *root;
+    if (node->p1)
+    {
+        if (GetMin(&node->p1, res))
+            return BalanceRemove1(root);
+    }
+    else
+    {
+        *root = node->p2;
+        *res = node;
         return !node->red;
     }
     return false;
 }
 
-
 // рекурсивная часть удаления
 //! \result true если нужен баланс
-template<typename T>
-bool RBtree<T>::erase(node_st **root,T value)
+template <typename T>
+bool RBtree<T>::erase(node_st **root, T value)
 {
-    node_st *t,*node=*root;
-    if(!node) return false;
-    if(node->value<value) {
-        if(erase(&node->p2,value))	return BalanceRemove2(root);
-    } else if(node->value>value) {
-        if(erase(&node->p1,value))	return BalanceRemove1(root);
-    } else {
+    node_st *t, *node = *root;
+    if (!node)
+        return false;
+    if (node->value < value)
+    {
+        if (erase(&node->p2, value))
+            return BalanceRemove2(root);
+    }
+    else if (node->value > value)
+    {
+        if (erase(&node->p1, value))
+            return BalanceRemove1(root);
+    }
+    else
+    {
         bool res;
-        if(!node->p2) {
-            *root=node->p1;
-            res=!node->red;
-        } else {
-            res=GetMin(&node->p2,root);
-            t=*root;
-            t->red=node->red;
-            t->p1=node->p1;
-            t->p2=node->p2;
-            if(res) res=BalanceRemove2(root);
+        if (!node->p2)
+        {
+            *root = node->p1;
+            res = !node->red;
+        }
+        else
+        {
+            res = GetMin(&node->p2, root);
+            t = *root;
+            t->red = node->red;
+            t->p1 = node->p1;
+            t->p2 = node->p2;
+            if (res)
+                res = BalanceRemove2(root);
         }
         DelNode(node);
         return res;
     }
     return 0;
 }
-
 
 //// вывод дерева
 //void RBtree<T>::Show()
@@ -357,28 +404,28 @@ bool RBtree<T>::erase(node_st **root,T value)
 //}
 
 // функция вставки
-template<typename T>
+template <typename T>
 void RBtree<T>::insert(T value)
 {
-    insert(value,&tree_root);
-    if(tree_root) tree_root->red=false;
+    insert(value, &tree_root);
+    if (tree_root)
+        tree_root->red = false;
 }
 
 // удаление узла
-template<typename T>
+template <typename T>
 void RBtree<T>::erase(T value)
 {
-    erase(&tree_root,value);
+    erase(&tree_root, value);
 }
 
 // снос дерева
-template<typename T>
+template <typename T>
 void RBtree<T>::Clear()
 {
     Clear(tree_root);
-    tree_root=0;
+    tree_root = 0;
 }
-
 
 //// проверка дерева (рекурсивная часть)
 ////! \param tree дерево
@@ -402,7 +449,6 @@ void RBtree<T>::Clear()
 //    check_code n=Check(p1,d,h); if(n) return n;
 //    return Check(p2,d,h);
 //}
-
 
 //// проверка дерева
 //template<typename T>
@@ -440,7 +486,6 @@ void RBtree<T>::Clear()
 //    return false;
 //}
 
-
 //================================================================
 //
 //#define SIZE 1000	//!< размер массива провеки
@@ -472,6 +517,3 @@ void RBtree<T>::Clear()
 //  getchar();
 //  return 0;
 //}
-
-
-
