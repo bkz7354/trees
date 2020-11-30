@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 
 def read_file(filename):
@@ -35,11 +36,11 @@ def get_scale(data):
     return np.ceil(max_y/100)*100
 
 def plot_comp(title, xs, data):
-    fig, axs = plt.subplots(1, len(data))
+    fig, axs = plt.subplots(2, 2, sharex=True, sharey=True)
     max_y = get_scale(data)
 
     fig.suptitle(title)
-    for i, (block, ax) in enumerate(zip(data, axs)):
+    for i, (block, ax) in enumerate(zip(data, axs.flatten())):
         ax.set_title(block['name'])
         ax.set_xlabel("N")
         ax.set_ylabel("t, нс")
@@ -48,9 +49,15 @@ def plot_comp(title, xs, data):
         ax.plot(xs, block['data'],'o')
     
     plt.show()
-    
 
-xs, ins_data, del_data  = read_file(input())
+
+if len(sys.argv) < 2:
+    print("syntax: ./plot.py <input_filename>")
+    sys.exit()
+
+filename = sys.argv[1]
+
+xs, ins_data, del_data  = read_file(filename)
 
 plot_comp("insertion speed", xs, ins_data)
 plot_comp("deletion speed", xs, del_data)
